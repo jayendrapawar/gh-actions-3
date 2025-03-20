@@ -1,8 +1,5 @@
 name: approve-and-merge-dev-pr
-on:
-  pull_request:
-    branches:
-      - dev
+on: pull_request
 jobs:
   auto-approve-and-merge:
     runs-on: ubuntu-latest

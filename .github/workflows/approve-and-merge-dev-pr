@@ -1,21 +1,31 @@
 name: approve-and-merge-dev-pr
+
 on: pull_request
+
 jobs:
   auto-approve-and-merge:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
     steps:
-      - uses: actions/github-script@v7
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Auto-approve and merge PR
+        uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.rest.pulls.createReview({
-              owner: context.payload.repository.owner.login,
-              repo: context.payload.repository.name,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               event: 'APPROVE'
             })
             github.rest.pulls.merge({
-              owner: context.payload.repository.owner.login,
-              repo: context.payload.repository.name,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               merge_method: 'fast-forward'
             })
